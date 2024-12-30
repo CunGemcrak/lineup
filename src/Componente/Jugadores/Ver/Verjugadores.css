@@ -1,0 +1,12 @@
+.CarJugadores {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .bg-secondary {
+    background-color: #6c757d !important;
+  }

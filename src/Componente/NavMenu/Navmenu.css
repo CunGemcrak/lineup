@@ -1,0 +1,45 @@
+.navbar-elegante {
+    background-color: #1c1c1c; /* Fondo oscuro para el navbar */
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  .navbar-image {
+    border-radius: 10%;
+  }
+  
+  .navbar-link {
+    color: #f8c300 !important; /* Color dorado para los enlaces */
+    font-size: 1.1rem;
+    padding: 10px;
+  }
+  
+  .navbar-link:hover {
+    color: #fff !important; /* Efecto hover con color blanco */
+    background-color: #f8c300; /* Fondo dorado al pasar el ratón */
+    border-radius: 5px;
+  }
+  
+  /* Ajustes para pantallas pequeñas */
+  @media (max-width: 767px) {
+    .navbar-elegante {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  
+    .navbar-link {
+      font-size: 1rem;
+    }
+  
+    .navbar-image {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+  .bordesimg{
+    border-radius: 100%;
+  }
+  .underline{
+    text-decoration: none; /* Elimina el subrayado */
+  }
