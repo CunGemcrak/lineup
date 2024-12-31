@@ -201,11 +201,12 @@ const Verjugadores = () => {
               <option value="">Selecciona un juego</option>
               {Juegos.map((juego) => (
                 <option key={juego.id} value={juego.id}>
-                  {juego.campeonato} - {juego.fechaJuego} - hora {juego.horaJuego}
+                  {juego.campeonato} - {juego.fechaJuego} - {juego.equipoLocal} VS {juego.equipoLocal}  - hora {juego.horaJuego} 
                 </option>
               ))}
             </Form.Control>
           </Form.Group>
+          
         </Col>
         <Col xs={12} md={6} className="d-flex align-items-end">
           <Button
