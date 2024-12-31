@@ -115,7 +115,7 @@ export const crearUsuario = (e, formData, isFormValid) => {
             const querySnapshot = await getDocs(collection(db, 'juegos'));
             const games = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
             const activeGamesList = games.filter(game => game.estado === 'activo');
-            alert(JSON.stringify(activeGamesList))
+          //  alert(JSON.stringify(activeGamesList))
             // Despachamos los juegos activos al store
             dispatch({
                 type: LISTAJUEGOS,

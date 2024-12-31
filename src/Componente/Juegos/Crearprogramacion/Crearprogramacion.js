@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase
 import { db } from '../../../ControllerFirebase/firebase'; // Asegúrate de usar la ruta correcta para importar la base de datos
 import alertify from 'alertifyjs'; // Importamos alertify
 
-const Juegosactivos = () => {
+const CrearProgramacion = () => {
     const [formData, setFormData] = useState({
         gameName: '',
         homeClub: '',
@@ -179,9 +179,52 @@ const Juegosactivos = () => {
                 </div>
             </div>
 
+            <div style={{ flex: '1 1 48%', minWidth: '300px', border: '1px solid #ccc', borderRadius: '8px', padding: '20px' }}>
+                <h2>Crear Juego de Softbol</h2>
+                <form onSubmit={handleCrearJuego}>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label htmlFor="gameName">Nombre del Juego:</label>
+                        <input type="text" id="gameName" name="gameName" value={formData.gameName} onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label htmlFor="homeClub">Equipo Local:</label>
+                        <input type="text" id="homeClub" name="homeClub" value={formData.homeClub} onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label htmlFor="visitorTeam">Equipo Visitante:</label>
+                        <input type="text" id="visitorTeam" name="visitorTeam" value={formData.visitorTeam} onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label htmlFor="gameDate">Fecha del Juego:</label>
+                        <input type="date" id="gameDate" name="gameDate" value={formData.gameDate} onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <label htmlFor="gameHour">Hora del Juego:</label>
+                        <select id="gameHour" name="gameHour" value={formData.gameHour} onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }}>
+                            <option value="">Selecciona una hora</option>
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((hour) => (
+                                <option key={hour} value={hour}>{hour}:00</option>
+                            ))}
+                        </select>
+                    </div>
+                    <button type="submit" style={{ padding: '10px 20px', background: 'blue', color: 'white', border: 'none', cursor: 'pointer', marginTop: '10px' }}>
+                        Crear Juego
+                    </button>
+                </form>
+            </div>
 
+            {/* Formulario de actualización de estado */}
+            {showUpdateForm && selectedGame && (
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', border: '1px solid #ccc', backgroundColor: '#fff' }}>
+                    <h3>Actualizar Estado de Juego</h3>
+                    <p><strong>Juego:</strong> {selectedGame.campeonato}</p>
+                    <button onClick={handleStartGame} style={{ marginRight: '10px' }}>Activar</button>
+                    <button onClick={handleFinishGame} style={{ marginRight: '10px' }}>Finalizar</button>
+                    <button onClick={handleCancelGame}>Cancelar</button>
+                </div>
+            )}
         </div>
     );
 };
 
-export default Juegosactivos;
+export default CrearProgramacion;
