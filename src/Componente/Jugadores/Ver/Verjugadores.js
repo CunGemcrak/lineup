@@ -68,7 +68,7 @@ const Verjugadores = () => {
     );
 
     if (isPositionTaken) {
-      alertify.alert('Posición duplicada', 'La posición seleccionada ya está asignada a otro jugador.');
+      alertify.alert('Posición duplicada', 'La posición seleccionada ya está asignada a otro jugado...');
       return;
     }
 
