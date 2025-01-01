@@ -17,7 +17,10 @@ const Listajugadores = () => {
       try {
         const jugadoresCollection = collection(db, 'jugadoresatleticos');
         const snapshot = await getDocs(jugadoresCollection);
-        const jugadoresList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const jugadoresList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
         setJugadores(jugadoresList);
       } catch (error) {
         console.error('Error al obtener jugadores desde Firestore:', error);
@@ -54,12 +57,20 @@ const Listajugadores = () => {
   const handleSave = async (index) => {
     try {
       const jugador = tempData;
+      if (!jugador.id) {
+        console.error('Error: jugador ID is undefined');
+        alertify.error('Error al guardar: ID del jugador no encontrado.');
+        return;
+      }
       const jugadorRef = doc(db, 'jugadoresatleticos', jugador.id);
 
-      await updateDoc(jugadorRef, jugador);
+      // Remove the 'id' field from the data to be updated
+      const { id, ...updateData } = jugador;
+
+      await updateDoc(jugadorRef, updateData);
 
       const updatedJugadores = [...jugadores];
-      updatedJugadores[index] = { ...tempData, eliminado: false };
+      updatedJugadores[index] = { ...jugador, eliminado: false };
       setJugadores(updatedJugadores);
 
       setEditingIndex(null);
@@ -150,6 +161,20 @@ const Listajugadores = () => {
                         name="sapellido"
                         value={tempData.sapellido}
                         onChange={handleChange}
+                        style={{ width: '100%', marginBottom: '5px' }}
+                      />
+                      <input
+                        type="text"
+                        name="tipo"
+                        value={tempData.tipo}
+                        onChange={handleChange}
+                        style={{ width: '100%', marginBottom: '5px' }}
+                      />
+                      <input
+                        type="text"
+                        name="equipo"
+                        value={tempData.equipo}
+                        onChange={handleChange}
                         style={{ width: '100%' }}
                       />
                     </>
@@ -158,6 +183,10 @@ const Listajugadores = () => {
                       {jugador.nombre}
                       <br />
                       {jugador.papellido} {jugador.sapellido}
+                      <br />
+                      {jugador.tipo} 
+                      <br/>
+                      {jugador.equipo}
                     </>
                   )}
                 </Card.Title>
@@ -185,7 +214,7 @@ const Listajugadores = () => {
                       style={{ width: '100%' }}
                     />
                   ) : (
-                    jugador.numerocamisa
+                    jugador.numerocamisa || jugador.numeroCamisa
                   )}
                   <br />
                   <strong>Fecha de Nacimiento:</strong>{' '}
@@ -198,7 +227,7 @@ const Listajugadores = () => {
                       style={{ width: '100%' }}
                     />
                   ) : (
-                    jugador.fechanacimiento
+                    jugador.fechanacimiento || jugador.fechaNacimiento
                   )}
                   {editingIndex === index && (
                     <>
@@ -261,3 +290,4 @@ const Listajugadores = () => {
 };
 
 export default Listajugadores;
+
