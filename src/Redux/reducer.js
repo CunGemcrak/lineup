@@ -1,5 +1,5 @@
 import {
-  LOGUEO, USUARIOREGISTRADO, LINEUP, LISTAJUEGOS } from "../Redux/action-types";
+  LOGUEO, USUARIOREGISTRADO, LINEUP, LISTAJUEGOS, CERRARUSUARIO, ACTUALIZARUSUARIO} from "../Redux/action-types";
 
 const initialState = {
   USER: false,
@@ -34,6 +34,16 @@ const reducer = (state = initialState, { type, payload }) => {
               JUEGOSACTIVOS:payload
   
             }
+        case CERRARUSUARIO:
+          return{
+            ...state,
+            USER:payload
+          }
+      case ACTUALIZARUSUARIO:
+        return{
+          ...state,
+          USER:payload
+        }
     default:
       return { ...state };
   }

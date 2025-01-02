@@ -1,4 +1,4 @@
-import { LOGUEO, USUARIOREGISTRADO, LINEUP, LISTAJUEGOS } from "./action-types";
+import { LOGUEO, USUARIOREGISTRADO, LINEUP, LISTAJUEGOS, CERRARUSUARIO, ACTUALIZARUSUARIO } from "./action-types";
 
 //!firebase
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -10,7 +10,15 @@ import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'; /
 import alertify from 'alertifyjs';
 
 
-
+export const actualizarUsuario = ()=>{
+  return async (dispatch) => {
+    // Despacha los datos combinados a Redux
+    dispatch({
+      type: ACTUALIZARUSUARIO,
+      payload: true,
+    });
+  }
+}
 
 export const accesoUsuario = (email, password) => {
     return async (dispatch) => {
@@ -37,6 +45,7 @@ export const accesoUsuario = (email, password) => {
           });
   
           alertify.success("Inicio de sesión exitoso");
+         return true;
         } else {
           throw new Error("Usuario no encontrado en la base de datos.");
         }
@@ -47,7 +56,15 @@ export const accesoUsuario = (email, password) => {
     };
   };
 
+export const  cerrarLogeo = () =>{
+  return async (dispatch) => {
+    dispatch({
+      type: CERRARUSUARIO,
+      payload: false,
+    });
 
+  }
+}
 
 
 
@@ -87,6 +104,7 @@ export const crearUsuario = (e, formData, isFormValid) => {
               nivel: formData.nivel,
             },
           });
+          return true;
   
         } catch (error) {
           console.error("Error al registrar usuario:", error);

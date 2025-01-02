@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { listaJuegos } from '../../Redux/actions';
+import Loading from '../Loading/Loading';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -9,14 +10,33 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [selectedGame, setSelectedGame] = useState(null);  // Inicializamos como null
     const [showUpdateForm, setShowUpdateForm] = useState(false);
-
+    const [showComponent , setShowComponent] = useState(true)
     // Efecto para cargar los juegos al montar el componente
     useEffect(() => {
         dispatch(listaJuegos());
      //   alert("entro")
     }, [dispatch]);
 
+
+
+    useEffect(() => {
+        // Mostrar el componente
+        setShowComponent(true);
+    
+        // Ocultar el componente después de 2 segundos
+        const timer = setTimeout(() => {
+            setShowComponent(false);
+        }, 2000);
+    
+        // Limpiar el temporizador si el componente se desmonta
+        return () => clearTimeout(timer);
+    }, []); 
     // Efecto para actualizar los juegos activos cuando llegan desde Redux
+
+
+
+
+    
     useEffect(() => {
         if (Listajuegos.length > 0) {
             setActiveGames(Listajuegos.filter(game => game.estado === 'activo'));
@@ -40,6 +60,7 @@ const Home = () => {
     return (
         <div>
             {/* Verifica si hay juegos activos */}
+            {showComponent ?<Loading/>:null}
             {loading ? (
                 <p>Cargando juegos...</p>
             ) : activeGames.length === 0 ? (

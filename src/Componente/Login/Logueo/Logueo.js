@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Nav } from 'react-bootstrap';
 import { MDBContainer, MDBRow, MDBCol, MDBInput } from 'mdb-react-ui-kit';
 import './Login.css';
 
 import { accesoUsuario } from '../../../Redux/actions'; 
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import Loading from '../../Loading/Loading';
 
 
 const Logueo = () => {
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
+  const [showComponent , setShowComponent] = useState(true)
+      useEffect(() => {
+              // Mostrar el componente
+              setShowComponent(true);
+          
+              // Ocultar el componente después de 2 segundos
+              const timer = setTimeout(() => {
+                  setShowComponent(false);
+              }, 2000);
+          
+              // Limpiar el temporizador si el componente se desmonta
+              return () => clearTimeout(timer);
+          }, []); 
 
   const [formData, setFormData] = useState({
     email: '',
@@ -25,25 +40,23 @@ const Logueo = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { email, password } = formData;
-    dispatch(accesoUsuario(email, password))
-    
+   
     // Validación simple
     if (!email || !password) {
       setErrors({ email: 'Por favor ingresa tu correo electrónico', password: 'Por favor ingresa tu contraseña' });
       return;
     }
 
-    // Si todo está bien, procesar el login
-   // dispatch({ type: 'LOGIN', payload: formData });
-
-    // Redirigir (si es necesario)
-  //  navigate('/dashboard');
+    const dato = await dispatch(accesoUsuario(email, password))
+  
+    dato ? navigate('/usuario/perfil') : navigate('/logueo');
   };
 
   return (
     <MDBContainer className="my-5">
+      {showComponent ?<Loading/>:null}
       <MDBRow className="align-items-center justify-content-center">
         {/* Columna izquierda: Formulario de Login */}
         <MDBCol>
@@ -93,7 +106,7 @@ const Logueo = () => {
                   </Button>
 
                   <div className="mt-3">
-                    <Nav.Link href="/rkey" className="texto-mario">¿Olvidaste tu contraseña?</Nav.Link>
+                    <Nav.Link href="/usuario/recuperarkey" className="texto-mario">¿Olvidaste tu contraseña?</Nav.Link>
                   </div>
 
                   <div className="mt-3">

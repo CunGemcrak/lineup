@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button, Card, Nav } from 'react-bootstrap';
 import { MDBContainer, MDBRow, MDBCol, MDBInput } from 'mdb-react-ui-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { crearUsuario } from '../../../Redux/actions';
 import './Registro.css';
+import Loading from '../../Loading/Loading';
+import { useNavigate } from 'react-router';
 
 const Registrate = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const REGISTRADO = useSelector((state) => state.ACTIONUSUARIO || "No");
+
+    const [showComponent , setShowComponent] = useState(true)
+        useEffect(() => {
+                // Mostrar el componente
+                setShowComponent(true);
+            
+                // Ocultar el componente después de 2 segundos
+                const timer = setTimeout(() => {
+                    setShowComponent(false);
+                }, 2000);
+            
+                // Limpiar el temporizador si el componente se desmonta
+                return () => clearTimeout(timer);
+            }, [dispatch]); 
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -69,11 +86,15 @@ const Registrate = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e)  => {
     e.preventDefault();
     const isValid = validateForm();
+    setShowComponent(true)
     if (isValid) {
-      dispatch(crearUsuario(e, formData, true));
+     const dato = await dispatch(crearUsuario(e, formData, true));
+     if(dato){
+      navigate('/logueo')
+     }
     } else {
       // Mark all fields as touched to show errors
       const allTouched = Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {});
@@ -83,6 +104,7 @@ const Registrate = () => {
 
   return (
     <MDBContainer className="my-5">
+       {showComponent ?<Loading/>:null}
       <MDBRow className="d-flex align-items-center justify-content-center">
         <MDBCol>
           <Card className="shadow-lg card-style border-black">

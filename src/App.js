@@ -11,6 +11,11 @@ import Logueo from './Componente/Login/Logueo/Logueo';
 import Registrate from './Componente/Login/Registro/Registrarusuario';
 import Addjugador from './Componente/Juegos/Addjugadores/Addjugadores';
 import CrearProgramacion from './Componente/Juegos/Crearprogramacion/Crearprogramacion';
+import PerfilUsuario from './Componente/Perfil/Perfiljugadores';
+import Recuperarkey from './Componente/Login/Olvidekey/Recuperarkey';
+import Loading from './Componente/Loading/Loading';
+import Crearcampeonato from './Componente/Campeonatos/Crearcampeonato';
+import Listacampeonatos from './Componente/Campeonatos/Listacampeonatos';
 
 function App() {
     /*<header className="App-header">
@@ -19,9 +24,17 @@ function App() {
     
     <div className="App">
        <Navmenu/>
+      
      <Routes>
 
         <Route path="/" element={<Home />} />
+
+
+
+        {
+          //perfil de usuario
+        }
+        <Route path="/usuario/perfil" element={<PerfilUsuario />} />
         <Route path="/jugadores/lineup" element={<Verjugadores />} />
         <Route path='/jugadores/add' element={<Addjugador/>}  />
 
@@ -38,7 +51,13 @@ function App() {
         
         <Route path='/logueo' element={<Logueo/>}  />
         <Route path='/registrate' element={<Registrate/>}  />
+        <Route path='/usuario/recuperarkey' element={<Recuperarkey/>}  />
 
+         {
+          //!CAmpeonatos Creados
+         }
+        <Route path='/campeonato/crear' element={<Crearcampeonato/>} />
+        <Route path='/campeonato/lista' element={<Listacampeonatos/>} />
       
 
 
