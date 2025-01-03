@@ -16,6 +16,9 @@ import Recuperarkey from './Componente/Login/Olvidekey/Recuperarkey';
 import Loading from './Componente/Loading/Loading';
 import Crearcampeonato from './Componente/Campeonatos/Crearcampeonato';
 import Listacampeonatos from './Componente/Campeonatos/Listacampeonatos';
+import Crearequipo from './Componente/Equipos/Crearequipos';
+import Listaequipos from './Componente/Equipos/Listadeequipos';
+import Equipojugadores from './Componente/Equipos/Equipojugadores';
 
 function App() {
     /*<header className="App-header">
@@ -58,6 +61,13 @@ function App() {
          }
         <Route path='/campeonato/crear' element={<Crearcampeonato/>} />
         <Route path='/campeonato/lista' element={<Listacampeonatos/>} />
+
+        {
+          //!equipos
+        }
+         <Route path='/equipos/crear' element={<Crearequipo/>} />
+         <Route path='/equipos/allequipos' element={<Listaequipos/>} />
+         <Route path='/equipos/equipo/:equipoId' element={<Equipojugadores/>} />
       
 
 

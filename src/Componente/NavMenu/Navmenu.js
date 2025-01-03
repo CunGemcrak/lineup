@@ -111,8 +111,8 @@ const handleSalir = () => {
                 Juegos
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={NavLink} to="/Juegos/crearprogramacion">Crear Juego</Dropdown.Item>
-                <Dropdown.Item as={NavLink} to="/juegos/juegosactivos">Listado de Juegos</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to="/Juegos/crearprogramacion">Crear Programacion</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to="/juegos/juegosactivos">Ver Programacion</Dropdown.Item>
                 <Dropdown.Item as={NavLink} to='/juego/partido'>Seguir Juego</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -130,8 +130,8 @@ const handleSalir = () => {
                 Equipos
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={NavLink} to="/Equipo/crear">Crear Equipo</Dropdown.Item>
-                <Dropdown.Item as={NavLink} to="/Equipo/ver">Ver Equipoos</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to='/equipos/crear'>Crear Equipo</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to='/equipos/allequipos'>Ver Equipoos</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
