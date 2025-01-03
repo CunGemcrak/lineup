@@ -148,6 +148,7 @@ const handleSalir = () => {
               <Dropdown.Menu>
                 <Dropdown.Item as={NavLink} to="/campeonato/crear">Crear Campeonato</Dropdown.Item>
                 <Dropdown.Item as={NavLink} to="/campeonato/lista">Lista Campeonatos</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to="/Equipo/acampeonato">Add Equipo Campeonato</Dropdown.Item>
                 <Dropdown.Item as={NavLink} to="/Equipo/Programacion">Programacion Campeonatos</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

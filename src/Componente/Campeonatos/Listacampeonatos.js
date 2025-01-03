@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, Container, Row, Col, Navbar, Button, Modal, Form } from "react-bootstrap";
-import { db } from "../../ControllerFirebase/firebase"; // Asegúrate de tener la configuración de Firebase
-import { collection, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../../ControllerFirebase/firebase"; // Configuración de Firebase
+import { collection, getDocs, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
 
 const Listacampeonatos = () => {
@@ -13,7 +13,7 @@ const Listacampeonatos = () => {
   const USUARIO = useSelector((state) => state.USER || null); // Obtener datos del usuario actual
 
   // Cargar campeonatos desde Firestore
-  const fetchCampeonatos = async () => {
+  const fetchCampeonatos = useCallback(async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "campeonatos"));
       const campeonatosData = querySnapshot.docs
@@ -26,37 +26,81 @@ const Listacampeonatos = () => {
     } catch (error) {
       console.error("Error al cargar los campeonatos: ", error);
     }
-  };
+  }, [USUARIO]);
 
   useEffect(() => {
     fetchCampeonatos(); // Llamar a la función para cargar los campeonatos
-  }, [USUARIO]);
+  }, [USUARIO, fetchCampeonatos]);
 
   // Función para actualizar el campeonato
   const handleUpdate = async () => {
-    if (selectedCampeonato) {
-      const campeonatoRef = doc(db, "campeonatos", selectedCampeonato.id);
-      try {
+    if (!selectedCampeonato || !nivel || !fechaInicio) {
+      console.error("Por favor, complete todos los campos.");
+      return;
+    }
+  
+    try {
+      // Crear la consulta para buscar el campeonato por nombre
+      const q = query(
+        collection(db, "campeonatos"),
+        where("nombreCampeonato", "==", selectedCampeonato.nombreCampeonato)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      // Si se encuentran documentos con ese nombre, actualizarlos
+      querySnapshot.forEach(async (docSnapshot) => {
+        const campeonatoRef = doc(db, "campeonatos", docSnapshot.id); // Obtener la referencia del documento usando el ID
         await updateDoc(campeonatoRef, {
           nivel: nivel,
           fechaInicio: fechaInicio,
         });
+  
+        console.log(`El campeonato con nombre ${selectedCampeonato.nombreCampeonato} ha sido actualizado correctamente.`);
+        alert(`El campeonato con nombre ${selectedCampeonato.nombreCampeonato} ha sido actualizado correctamente.`);
         setShowUpdateModal(false); // Cerrar el modal
         fetchCampeonatos(); // Refrescar los campeonatos
-      } catch (error) {
-        console.error("Error al actualizar el campeonato: ", error);
+      });
+  
+      // Si no se encontró el campeonato
+      if (querySnapshot.empty) {
+        alert(`No se encontró el campeonato con nombre ${selectedCampeonato.nombreCampeonato}.`);
       }
+    } catch (error) {
+      console.error("Error al actualizar el campeonato: ", error);
+      alert("Hubo un error al intentar actualizar el campeonato. Por favor, inténtalo de nuevo.");
     }
   };
+  
 
   // Función para eliminar el campeonato
-  const handleDelete = async (id) => {
-    const campeonatoRef = doc(db, "campeonatos", id);
+  const handleDelete = async (nombreCampeonato) => {
+    if (!nombreCampeonato) {
+      console.error("No se proporcionó un nombre válido para eliminar.");
+      return;
+    }
+
     try {
-      await deleteDoc(campeonatoRef);
-      fetchCampeonatos(); // Refrescar los campeonatos
+      // Crear la consulta para buscar el campeonato por nombre
+      const q = query(collection(db, "campeonatos"), where("nombreCampeonato", "==", nombreCampeonato));
+      const querySnapshot = await getDocs(q);
+
+      // Si se encuentran documentos con ese nombre, eliminarlos
+      querySnapshot.forEach(async (docSnapshot) => {
+        const campeonatoRef = doc(db, "campeonatos", docSnapshot.id); // Obtener la referencia del documento
+        await deleteDoc(campeonatoRef); // Eliminar el documento
+        console.log(`El campeonato con nombre ${nombreCampeonato} ha sido eliminado correctamente.`);
+        alert(`El campeonato con nombre ${nombreCampeonato} ha sido eliminado correctamente.`);
+        fetchCampeonatos(); // Refrescar los campeonatos después de eliminar
+      });
+
+      // Si no se encontró el campeonato
+      if (querySnapshot.empty) {
+        alert(`No se encontró el campeonato con nombre ${nombreCampeonato}.`);
+      }
     } catch (error) {
       console.error("Error al eliminar el campeonato: ", error);
+      alert("Hubo un error al intentar eliminar el campeonato. Por favor, inténtalo de nuevo.");
     }
   };
 
@@ -101,14 +145,13 @@ const Listacampeonatos = () => {
                       }}
                     >
                       Actualizar
-                    </Button>
+                    </Button>{" "}
                     <Button 
                       variant="danger" 
-                      onClick={() => handleDelete(campeonato.id)}
+                      onClick={() => handleDelete(campeonato.nombreCampeonato)} // Eliminar por nombre
                     >
                       Eliminar
-                    </Button>{" "}
-              
+                    </Button>
                   </Card.Body>
                 </Card>
               </Col>
@@ -128,14 +171,31 @@ const Listacampeonatos = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="nivel">
-              <Form.Label>Nivel</Form.Label>
-              <Form.Control
-                type="text"
-                value={nivel}
-                onChange={(e) => setNivel(e.target.value)}
-              />
-            </Form.Group>
+           
+ <Form.Group className="mb-3">
+                    <Form.Label>Nivel</Form.Label>
+                    <Form.Select
+                      value={nivel}
+                      onChange={(e) => setNivel(e.target.value)}>
+                      <option>Novato</option>
+                      <option>Novato Ascenso</option>
+                      <option>Regular</option>
+                      <option>Regular Fuerte</option>
+                      <option>Fuerte</option>
+                    </Form.Select>
+                  </Form.Group>
+
+
+
+
+
+
+
+
+
+
+
+        
             <Form.Group controlId="fechaInicio">
               <Form.Label>Fecha de Inicio</Form.Label>
               <Form.Control
@@ -144,6 +204,13 @@ const Listacampeonatos = () => {
                 onChange={(e) => setFechaInicio(e.target.value)}
               />
             </Form.Group>
+                   
+
+
+
+
+
+
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -153,7 +220,6 @@ const Listacampeonatos = () => {
           <Button variant="primary" onClick={handleUpdate}>
             Actualizar
           </Button>
-         
         </Modal.Footer>
       </Modal>
     </>

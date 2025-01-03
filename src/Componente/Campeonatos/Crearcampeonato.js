@@ -44,6 +44,7 @@ const Crearcampeonato = () => {
       fechaInicio,
       idUsuario: DATOSUSUARIO.uid,
       email: DATOSUSUARIO.email,
+     
     };
 
     try {
