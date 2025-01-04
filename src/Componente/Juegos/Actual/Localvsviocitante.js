@@ -4,8 +4,11 @@ import { db } from '../../../ControllerFirebase/firebase';
 import { collection, getDocs, query, where, doc, updateDoc } from 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
+import { useNavigate } from 'react-router';
 
-const BaseballGameManager = () => {
+const Loclvsvisitantes = () => {
   // State variables from Tablero
   const [homeTeam, setHomeTeam] = useState('Local');
   const [awayTeam, setAwayTeam] = useState('Visitante');
@@ -24,6 +27,8 @@ const BaseballGameManager = () => {
   const [editedBattingOrder, setEditedBattingOrder] = useState(null);
   const [editedActions, setEditedActions] = useState('');
   const [turnosAlBat, setTurnosAlBat] = useState({});
+  const [idLineupEliminar, setidLineupEliminar] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchLineups = async () => {
@@ -61,7 +66,7 @@ const BaseballGameManager = () => {
   };
 
   // Functions from Loclvsvisitantes
-  const handleSelectLineup = (lineupId) => {
+  /*const handleSelectLineup = (lineupId) => {
     const lineup = lineups.find(l => l.id === lineupId);
     if (lineup) {
       setSelectedLineup(lineup);
@@ -71,7 +76,28 @@ const BaseballGameManager = () => {
       setHomeTeam(lineup.equipo1);
       setAwayTeam(lineup.equipo2);
     }
+  };*/
+  const handleSelectLineup = (lineupId) => {
+    if (!lineups || lineups.length === 0) {
+      console.error('La lista de lineups está vacía o no está cargada.');
+      return;
+    }
+    const lineup = lineups.find(l => String(l.id) === String(lineupId));
+    if (lineup) {
+      setidLineupEliminar(lineup.id)
+      setSelectedLineup(lineup);
+      setJugadores(lineup.players || []);
+      setActions(lineup.actions || {});
+      setTurnosAlBat(lineup.TurnosAlBat || {});
+      setHomeTeam(lineup.equipo1 || 'Equipo Local');
+      setAwayTeam(lineup.equipo2 || 'Equipo Visitante');
+    } else {
+      console.error(`No se encontró el lineup con ID ${lineupId}.`);
+    }
   };
+  
+
+
 
   const handleNextTurn = () => {
     setTurnoActual((prevTurno) => (prevTurno + 1) % jugadores.length);
@@ -158,6 +184,35 @@ const BaseballGameManager = () => {
     }
   };
 
+
+  const hableFinalizarJuego = () => {
+    alertify.confirm(
+      'Confirmación',
+      '¿Seguro que quieres finalizar el juego?',
+      async () => {
+        if (selectedLineup) {
+          alert(idLineupEliminar)
+          const lineupRef = doc(db, 'lineups', selectedLineup.id);
+          const gameRef = doc(db, 'juegos', idLineupEliminar);
+
+          try {
+            // Actualizar estado en Firestore
+            await updateDoc(lineupRef, { juego: 'Finalizado' });
+            await updateDoc(gameRef, { estado: 'Finalizado' });
+            navigate("/jugadores/lineup")
+            alertify.success('El juego ha sido finalizado correctamente');
+          } catch (error) {
+            alertify.error('Error al finalizar el juego');
+            console.error('Error al finalizar el juego:', error);
+          }
+        }
+      },
+      () => {
+        alertify.message('Cancelado');
+      }
+    );
+  };
+
   return (
     <Container className="mt-5">
       <Row>
@@ -195,6 +250,15 @@ const BaseballGameManager = () => {
                 className="bg-gradient-primary-to-secondary fw-bold animate__animated animate__pulse animate__infinite"
               >
                 Siguiente
+              </Button>
+              <br/>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={hableFinalizarJuego}
+                className="mt-2 bg-gradient-primary-to-secondary fw-bold animate__animated animate__pulse animate__infinite"
+              >
+                End Game
               </Button>
             </Col>
           </Row>
@@ -299,11 +363,18 @@ const BaseballGameManager = () => {
               onChange={(e) => handleSelectLineup(e.target.value)}
             >
               <option value="">Seleccione un Lineup</option>
-              {lineups.map(lineup => (
+              {/*lineups.map(lineup => (
                 <option key={lineup.id} value={lineup.id}>
                   {lineup.equipo1} VS {lineup.equipo2}
                 </option>
-              ))}
+              ))*/}
+
+{lineups.map((lineup) => (
+  <option key={lineup.id} value={lineup.id}>
+     {lineup.equipo1} VS {lineup.equipo2}
+  </option>
+))}
+
             </select>
           </div>
 
@@ -383,5 +454,5 @@ const BaseballGameManager = () => {
   );
 };
 
-export default BaseballGameManager;
+export default Loclvsvisitantes;
 
