@@ -6,6 +6,7 @@ import { db } from '../../../ControllerFirebase/firebase';
 import { collection, getDocs, addDoc, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { lineUpAtleticos } from '../../../Redux/actions';
+import { useNavigate } from 'react-router';
 
 const Verjugadores = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Verjugadores = () => {
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [allowMoreSelection, setAllowMoreSelection] = useState(false);
   const [selectedGame, setSelectedGame] = useState('');
+  const navigate = useNavigate()
 
   const positionOptions = [
     { value: 'Pitcher', label: '1 Pitcher' },
@@ -95,6 +97,7 @@ const Verjugadores = () => {
       papellido: jugador.papellido,
       sapellido: jugador.sapellido,
       posicion: selectedPosition,
+     
     };
 
     const updatedSelectedPlayers = [...selectedPlayers, newPlayer];
@@ -132,7 +135,7 @@ const Verjugadores = () => {
   };
 
   const createLineup = async () => {
-    alert(selectedGame)
+   // alert(selectedGame)
     if (!selectedGame) {
       alertify.alert('Juego no seleccionado', 'Por favor, selecciona un juego antes de crear el lineup.');
       return;
@@ -160,6 +163,9 @@ const Verjugadores = () => {
         campeonato: gameData.campeonato,
         fechaJuego: gameData.fechaJuego,
         horaJuego: gameData.horaJuego,
+        juego: 'Activo',
+        equipo1: gameData.equipoLocal,
+        equipo2: gameData.equipoVisitante,
         players: selectedPlayers.map((player, index) => ({
           ...player,
           battingOrder: index + 1,
@@ -180,6 +186,8 @@ const Verjugadores = () => {
       setPositions(jugadores.map(() => ({ posicion: '' })));
       setAllowMoreSelection(false);
       setSelectedGame('');
+
+      navigate('/juego/partido')
     } catch (error) {
       console.error('Error al guardar el lineup:', error);
       alertify.error('Error al guardar el lineup.');
@@ -202,7 +210,7 @@ const Verjugadores = () => {
               <option value="">Selecciona un juego</option>
               {Juegos.map((juego) => (
                 <option key={juego.id} value={juego.id}>
-                  {juego.campeonato} - {juego.fechaJuego} - {juego.equipoLocal} VS {juego.equipoLocal}  - hora {juego.horaJuego} 
+                  {juego.campeonato} - {juego.fechaJuego} - {juego.equipoLocal} VS {juego.equipoVisitante}  - hora {juego.horaJuego} 
                 </option>
               ))}
             </Form.Control>
