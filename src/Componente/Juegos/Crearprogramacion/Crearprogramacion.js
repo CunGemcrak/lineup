@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../ControllerFirebase/firebase'; // Asegúrate de usar la ruta correcta para importar la base de datos
-import alertify from 'alertifyjs'; // Importamos alertify
+import { db } from '../../../ControllerFirebase/firebase';
+import alertify from 'alertifyjs';
 
 const CrearProgramacion = () => {
     const [formData, setFormData] = useState({
@@ -59,10 +59,10 @@ const CrearProgramacion = () => {
                 gameDate: '',
                 gameHour: '',
             });
-            alert('Juego guardado en Firebase');
+            alertify.success('Juego guardado en Firebase');
         } catch (error) {
             console.error('Error al guardar el juego en Firestore:', error.message);
-            alert('Error: ' + error.message);
+            alertify.error('Error: ' + error.message);
         }
     };
 
@@ -70,10 +70,10 @@ const CrearProgramacion = () => {
         try {
             await deleteDoc(doc(db, 'juegos', id));
             setGames(games.filter((game) => game.id !== id));
-            alert('Juego eliminado con éxito');
+            alertify.success('Juego eliminado con éxito');
         } catch (error) {
             console.error('Error al eliminar el juego:', error.message);
-            alert('Error al eliminar el juego: ' + error.message);
+            alertify.error('Error al eliminar el juego: ' + error.message);
         }
     };
 
@@ -88,11 +88,6 @@ const CrearProgramacion = () => {
 
     const handleStartGame = async () => {
         if (selectedGame) {
-            if (games.some(game => game.estado === 'activo')) {
-                alertify.error('Solo un juego puede estar activo a la vez');
-                return;
-            }
-
             selectedGame.estado = 'activo';
             await updateDoc(doc(db, 'juegos', selectedGame.id), { estado: 'activo' });
 
@@ -134,24 +129,6 @@ const CrearProgramacion = () => {
         return dateA - dateB;
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
             <div style={{ flex: '1 1 48%', minWidth: '300px' }}>
@@ -160,7 +137,7 @@ const CrearProgramacion = () => {
                     {sortedGames.map((juego) => (
                         <div key={juego.id} style={{
                             border: '1px solid #ccc', padding: '10px', marginBottom: '10px', borderRadius: '8px',
-                            backgroundColor: juego.estado === 'activo' ? 'green' : juego.estado === 'finalizado' ? 'gray' : 'white'
+                            backgroundColor: juego.estado === 'activo' ? 'lightgreen' : juego.estado === 'finalizado' ? 'lightgray' : 'white'
                         }}>
                             <h3>{juego.campeonato}</h3>
                             <p><strong>Local:</strong> {juego.equipoLocal} | <strong>Visitante:</strong> {juego.equipoVisitante}</p>
@@ -213,9 +190,8 @@ const CrearProgramacion = () => {
                 </form>
             </div>
 
-            {/* Formulario de actualización de estado */}
             {showUpdateForm && selectedGame && (
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', border: '1px solid #ccc', backgroundColor: '#fff' }}>
+                <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px', border: '1px solid #ccc', backgroundColor: '#fff', zIndex: 1000 }}>
                     <h3>Actualizar Estado de Juego</h3>
                     <p><strong>Juego:</strong> {selectedGame.campeonato}</p>
                     <button onClick={handleStartGame} style={{ marginRight: '10px' }}>Activar</button>
@@ -228,3 +204,4 @@ const CrearProgramacion = () => {
 };
 
 export default CrearProgramacion;
+

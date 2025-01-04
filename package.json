@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "alertifyjs": "^1.14.0",
+    "animate.css": "^4.1.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
