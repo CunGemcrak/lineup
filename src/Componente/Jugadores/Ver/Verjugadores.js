@@ -132,6 +132,7 @@ const Verjugadores = () => {
   };
 
   const createLineup = async () => {
+    alert(selectedGame)
     if (!selectedGame) {
       alertify.alert('Juego no seleccionado', 'Por favor, selecciona un juego antes de crear el lineup.');
       return;

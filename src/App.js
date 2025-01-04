@@ -13,12 +13,13 @@ import Addjugador from './Componente/Juegos/Addjugadores/Addjugadores';
 import CrearProgramacion from './Componente/Juegos/Crearprogramacion/Crearprogramacion';
 import PerfilUsuario from './Componente/Perfil/Perfiljugadores';
 import Recuperarkey from './Componente/Login/Olvidekey/Recuperarkey';
-import Loading from './Componente/Loading/Loading';
+/*import Loading from './Componente/Loading/Loading';
 import Crearcampeonato from './Componente/Campeonatos/Crearcampeonato';
 import Listacampeonatos from './Componente/Campeonatos/Listacampeonatos';
 import Crearequipo from './Componente/Equipos/Crearequipos';
 import Listaequipos from './Componente/Equipos/Listadeequipos';
 import Equipojugadores from './Componente/Equipos/Equipojugadores';
+import Listajugadoresequipo from './Componente/Equipos/Listajugadoresequipo';*/
 
 function App() {
     /*<header className="App-header">
@@ -32,43 +33,42 @@ function App() {
 
         <Route path="/" element={<Home />} />
 
-
+        <Route path="/usuario/perfil" element={<PerfilUsuario />} /> { //!Perfuil del usuario
+        }
 
         {
-          //perfil de usuario
+          //perfil de Jugadores
         }
-        <Route path="/usuario/perfil" element={<PerfilUsuario />} />
-        <Route path="/jugadores/lineup" element={<Verjugadores />} />
-        <Route path='/jugadores/add' element={<Addjugador/>}  />
+       
+        <Route path='/jugadores/ver' element={<Listajugadores/>}  /> { //!Ver lista de jugadores
+        }
+        <Route path="/jugadores/lineup" element={<Verjugadores />} />{//! Crear el lineup
+        }
+        <Route path='/jugadores/add' element={<Addjugador/>}  /> { //!Crear nuevo Jugador
+
+        }
 
 
-        <Route path="/Juegos/crearprogramacion" element={<CrearProgramacion />} />
+        <Route path="/Juegos/crearprogramacion" element={<CrearProgramacion />} /> {//!Crear Programacion
+
+        }
 
 
 
-        <Route path="/juegos/juegosactivos" element={<Juegosactivos />} />
-        <Route path='/juego/partido' element={<Loclvsvisitantes/>}  />
+       {//!ver programacion <Route path="/juegos/juegosactivos" element={<Juegosactivos />} /> 
+
+        }
+        <Route path='/juego/partido' element={<Loclvsvisitantes/>}  /> { //!PArtidos con lineup
+
+        }
 
 
-        <Route path='/jugadores/ver' element={<Listajugadores/>}  />
+    
         
         <Route path='/logueo' element={<Logueo/>}  />
         <Route path='/registrate' element={<Registrate/>}  />
         <Route path='/usuario/recuperarkey' element={<Recuperarkey/>}  />
 
-         {
-          //!CAmpeonatos Creados
-         }
-        <Route path='/campeonato/crear' element={<Crearcampeonato/>} />
-        <Route path='/campeonato/lista' element={<Listacampeonatos/>} />
-
-        {
-          //!equipos
-        }
-         <Route path='/equipos/crear' element={<Crearequipo/>} />
-         <Route path='/equipos/allequipos' element={<Listaequipos/>} />
-         <Route path='/equipos/equipo/:equipoId' element={<Equipojugadores/>} />
-      
 
 
 

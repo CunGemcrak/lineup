@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Form, Container, Row, Col } from "react-bootstrap";
-import { db } from "../../ControllerFirebase/firebase"; // Firebase config
+import { db } from "../../../ControllerFirebase/firebase"; // Firebase config
 import {
   collection,
   doc,
@@ -13,12 +13,14 @@ import {
 import { useParams } from "react-router-dom";
 
 const Equipojugadores = () => {
-  const {equipoId } = useParams(); // Obtener equipoId desde la URL
+  const { equipoId } = useParams(); // Obtener equipoId desde la URL
   const [equipoData, setEquipoData] = useState(null);
   const [campeonatos, setCampeonatos] = useState([]);
   const [selectedCampeonato, setSelectedCampeonato] = useState("");
   const [searchJugador, setSearchJugador] = useState("");
   const [jugadoresEncontrados, setJugadoresEncontrados] = useState([]);
+  const [selectedJugador, setSelectedJugador] = useState("");
+  const [jugadoresAsignados, setJugadoresAsignados] = useState([]);
   const [equipoJugadores, setEquipoJugadores] = useState([]);
 
   // Buscar equipo por ID al cargar el componente
@@ -68,23 +70,28 @@ const Equipojugadores = () => {
       alert("Por favor, seleccione un campeonato.");
       return;
     }
-
     try {
       const campeonatoRef = doc(db, "campeonatos", selectedCampeonato);
-      const campeonatoSnapshot = await getDoc(campeonatoRef);
+      const campeonatoDoc = await getDoc(campeonatoRef);
 
-      if (campeonatoSnapshot.exists()) {
-        const equipos = campeonatoSnapshot.data().equipos || [];
-        if (equipos.includes(equipoId)) {
-          alert("El equipo ya está registrado en este campeonato.");
-          return;
-        }
-
-        await updateDoc(campeonatoRef, {
-          equipos: [...equipos, equipoId],
-        });
-        alert("Equipo agregado al campeonato exitosamente.");
+      if (!campeonatoDoc.exists()) {
+        alert("No se encontró el campeonato seleccionado.");
+        return;
       }
+
+      const campeonatoData = campeonatoDoc.data();
+      const equipos = campeonatoData.equipos || [];
+      const codigoEquipo = equipoData.codigoEquipo;
+
+      if (equipos.includes(codigoEquipo)) {
+        alert("El equipo ya está registrado en este campeonato.");
+        return;
+      }
+
+      await updateDoc(campeonatoRef, {
+        equipos: [...equipos, codigoEquipo],
+      });
+      alert("Equipo agregado al campeonato exitosamente.");
     } catch (error) {
       console.error("Error al agregar al campeonato: ", error);
     }
@@ -92,6 +99,7 @@ const Equipojugadores = () => {
 
   // Buscar jugadores
   const buscarJugadores = async () => {
+    alert(searchJugador)
     if (!searchJugador) {
       alert("Por favor, ingrese un nombre o ID de jugador.");
       return;
@@ -99,7 +107,7 @@ const Equipojugadores = () => {
 
     try {
       const q = query(
-        collection(db, "Usuarios"),
+        collection(db, "usuarios"),
         where("nombre", "==", searchJugador) // También puedes buscar por ID usando otro where()
       );
       const querySnapshot = await getDocs(q);
@@ -108,6 +116,7 @@ const Equipojugadores = () => {
         ...doc.data(),
       }));
       setJugadoresEncontrados(jugadores);
+      alert(JSON.stringify(jugadores))
     } catch (error) {
       console.error("Error al buscar jugadores: ", error);
     }
@@ -159,8 +168,8 @@ const Equipojugadores = () => {
                       <option value="">Seleccione un campeonato</option>
                       {campeonatos.map((campeonato) => (
                         <option key={campeonato.id} value={campeonato.id}>
-                          {campeonato.nombreCampeonato} - organizador - {campeonato.organizador} {campeonato.primerApellido
-                          }
+                          Campeonato {campeonato.nombreCampeonato} - Organizador:{" "}
+                          {campeonato.organizador} - ID: {campeonato.id}
                         </option>
                       ))}
                     </Form.Select>
@@ -192,7 +201,7 @@ const Equipojugadores = () => {
                           className="d-flex justify-content-between align-items-center mb-2"
                         >
                           <span>
-                            {jugador.nombre} {jugador.papellido} ({jugador.id})
+                            {jugador.nombre} {jugador.papellido} {jugador.sapellido} - ({jugador.id})
                           </span>
                           <Button
                             variant="secondary"
@@ -203,6 +212,20 @@ const Equipojugadores = () => {
                         </div>
                       ))}
                     </div>
+                  )}
+
+                  <hr />
+                  <h5>Jugadores Asignados</h5>
+                  {equipoJugadores.length > 0 ? (
+                    <ul>
+                      {equipoJugadores.map((jugador, index) => (
+                        <li key={index}>
+                          {jugador.nombre} {jugador.papellido} {jugador.sapellido} ({jugador.id})
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No hay jugadores asignados.</p>
                   )}
                 </>
               ) : (

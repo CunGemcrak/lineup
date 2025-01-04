@@ -111,13 +111,16 @@ const handleSalir = () => {
                 Juegos
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={NavLink} to="/Juegos/crearprogramacion">Crear Programacion</Dropdown.Item>
-                <Dropdown.Item as={NavLink} to="/juegos/juegosactivos">Ver Programacion</Dropdown.Item>
+                <Dropdown.Item as={NavLink} to="/Juegos/crearprogramacion">Crear Juego</Dropdown.Item>
+               { 
+                //!<Dropdown.Item as={NavLink} to="/juegos/juegosactivos">Ver Programacion</Dropdown.Item>
+                }
                 <Dropdown.Item as={NavLink} to='/juego/partido'>Seguir Juego</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
-
+            {  
+         /*  
 
 
 
@@ -136,13 +139,13 @@ const handleSalir = () => {
             </Dropdown>
 
 
-
+         
             <Dropdown
               show={showCampeonatoDropdown}
               onMouseEnter={() => setShowCampeonatosDropdown(true)}
               onMouseLeave={() => setShowCampeonatosDropdown(false)}
             >
-              <Dropdown.Toggle as={Nav.Link} className="navbar-link underline">
+            <Dropdown.Toggle as={Nav.Link} className="navbar-link underline">
                 Camponatos
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -151,7 +154,7 @@ const handleSalir = () => {
                 <Dropdown.Item as={NavLink} to="/Equipo/acampeonato">Add Equipo Campeonato</Dropdown.Item>
                 <Dropdown.Item as={NavLink} to="/Equipo/Programacion">Programacion Campeonatos</Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown>**/}
 
 
 

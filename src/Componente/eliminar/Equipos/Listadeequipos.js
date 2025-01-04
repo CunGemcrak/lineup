@@ -71,10 +71,20 @@ const Listaequipos = () => {
       alert("Hubo un error al actualizar el equipo.");
     }
   };
-  const Listajugadores = (id)=>{
+  const Addcampeonato = (id)=>{
     alert(id)
-    navigate('/equipos/equipo/'+id)
+  //  navigate('/equipos/equipo/'+id)
   }
+
+const Listajugadores = (id) =>{
+  alert(id)
+ // navigate('/equipos/jugadores/final/'+id)
+}
+
+
+
+
+
   return (
     <Container>
       <Row className="justify-content-center">
@@ -99,20 +109,25 @@ const Listaequipos = () => {
             <Button
               variant="warning"
               onClick={() => handleOpenUpdateModal(equipo)}
-              className="me-2"
+              className="me-1"
+              style={{fontSize:'12px'}}
             >
               Actualizar
             </Button>
             <Button
               variant="danger"
               onClick={() => handleDelete(equipo.id)}
-              className="me-2"
+              className="me-1"
+              style={{fontSize:'12px'}}
             >
               Eliminar
             </Button>
-            <Button variant="primary" onClick={() => Listajugadores(equipo.id)}>
-              Ver
+            <Button  className="me-1" style={{fontSize:'12px'}} variant="primary" onClick={() => Addcampeonato(equipo.id)}>
+              Campeonato
             </Button>
+            <Button style={{fontSize:'12px'}} variant="primary" onClick={()=>{Listajugadores(equipo.id)}}>
+             Jugadores
+          </Button>
           </Card.Body>
         </Card>
       </Col>
@@ -153,6 +168,7 @@ const Listaequipos = () => {
           <Button variant="primary" onClick={()=>{Listajugadores(selectedEquipo)}}>
             ver
           </Button>
+          
         </Modal.Footer>
       </Modal>
     </Container>
